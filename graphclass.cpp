@@ -95,7 +95,7 @@ void Graph::initializegraph(std::string const filename){
         else//sonst müssen wir uns bereits in DEMAND_SECTION befinden also wird die Nachfrage des Kunden ausgelesen und gespeichert
         {
             number =stoi(fillera,nullptr);
-            nodes[number].setdemand(demandval);
+            nodes[number-1].setdemand(demandval);
             if (number<0||number>size||demandval<0||demandval>capacity){//Abfangen von Fehlern beim auslesen
                 std::cout<<"Please check node Number "<<number<<"in DEMAND_SECTION.";
                 std::terminate();
