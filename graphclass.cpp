@@ -77,6 +77,7 @@ void Graph::initializegraph(std::string const filename){
             demand = true;
             number=xpos;
             demandval=ypos;
+	    fillera=std::to_string(number);
         }
         else if(fillera.compare(0,13,"DEPOT_SECTION")==0){
             break;
@@ -100,7 +101,7 @@ void Graph::initializegraph(std::string const filename){
                 std::terminate();
             }
         }
-        if(demand) file>>fillera>>xpos>>ypos;
+        if(!demand) file>>fillera>>xpos>>ypos;
         else file>>fillera>>demandval;
     }
     file.close();
