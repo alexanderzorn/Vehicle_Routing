@@ -41,8 +41,7 @@ int main (int argc, char* argv[]){
     graph.tourpartition();
     
     //graph.print();
-    //graph.printtours();
-    //graph.worstdist();
+   // graph.printtours();
     
     
     /*
