@@ -105,7 +105,8 @@ void Graph::initializegraph(std::string const filename){
         else file>>fillera>>demandval;
     }
     file.close();
-    if (nodes.size()!=size)//Falls die angegebene DIMENSION und die tatsächliche Vektorlänge von nodes nicht übereinstimmen beendet sich das Programm
+    size_t sizeinsizetype = size;
+    if (nodes.size()!=sizeinsizetype)//Falls die angegebene DIMENSION und die tatsächliche Vektorlänge von nodes nicht übereinstimmen beendet sich das Programm
     {
         std::cout<<"Please check the number list. It size does not match with the listed DIMENSION.";
         std::terminate();
