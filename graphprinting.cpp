@@ -55,7 +55,7 @@ void Graph::visualprint(){
         if(maximumsize<nodes[n].getxpos())maximumsize=nodes[n].getxpos();
         if(maximumsize<nodes[n].getypos())maximumsize=nodes[n].getypos();
     }
-    f.open("visualprint2.svg", std::ios_base::out | std::ios_base::trunc );
+    f.open("visualprint.svg", std::ios_base::out | std::ios_base::trunc );
     f <<"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"<<std::endl;
     f<<"<svg xmlns=\"http://www.w3.org/2000/svg\""<<std::endl;
     f<<"xmlns:xlink=\"http://www.w3.org/1999/xlink\""<<std::endl;
