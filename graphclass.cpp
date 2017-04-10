@@ -70,7 +70,7 @@ void Graph::initializegraph(std::string const filename){
     }
     number= stoi(fillerb);
     file>>xpos>>ypos;
-    bool demand  = false;//Gibt an ob das Programm sich bereits in der DEMAN_SECTION des files befindet und liest die Datei demenstprechend aus
+    bool demand  = false;//Gibt an ob das Programm sich bereits in der DEMAND_SECTION des files befindet und liest die Datei demenstprechend aus
     while(!file.eof()){
         if(fillera.compare(0,14,"DEMAND_SECTION")==0)//Überprufen der aktuellen Zeile auf den String DEMAND_SECTION
         {
@@ -122,51 +122,23 @@ void Graph::simplehelp(int i)//Dient simpletour als Funktion die von jedem Threa
 
 void Graph::simpletour()//Erstellt eine einfache Tour auf den Knoten der Form 1,2,3,...,n,1
 {
-    static const int number_of_threads = size-1;
+    static const int number_of_threads = size-2;
     std::vector <std::thread> t;
     nodes[0].setneighbora(size-1);
     nodes[0].setneighborb(1);
     nodes[size-1].setneighbora(size-2);
     nodes[size-1].setneighborb(0);
 
-    //Launch a group of threads
-    for (int i = 0; i < number_of_threads-1; ++i) { 
-        t.push_back(std::thread{&Graph::simplehelp,this , i+1}); 
+    //Starte die verschiedenen Theards, in jedem Thread werden die Nachbarn für einen Knoten festgelegt
+    for (int i = 0; i < number_of_threads; ++i) { 
+        t.push_back(std::thread(&Graph::simplehelp,this, i+1)); 
     }
 
-    //Join the threads with the main thread
-    for (int i = 0; i < number_of_threads-1; ++i) {
+    //Warte bis alle fertig sind.
+    for (int i = 0; i < number_of_threads; i++) {
         t[i].join();
     }
-
-    /*for(int i=1; i<size-1;i++){
-        nodes[i].setneighbora(i-1);
-        nodes[i].setneighborb(i+1);
-    }*/
 }
-
-/*
-      ...
- 2     static const int num_threads = 10;
- 3     ...
- 4     int main() {
- 5         std::thread t[num_threads];
- 6 
- 7         //Launch a group of threads
- 8         for (int i = 0; i < num_threads; ++i) {
- 9             t[i] = std::thread(call_from_thread);
-10         }
-11 
-12         std::cout << "Launched from the main\n";
-13 
-14         //Join the threads with the main thread
-15         for (int i = 0; i < num_threads; ++i) {
-16             t[i].join();
-17         }
-18 
-19         return 0;
-20     }
-*/
 
 double Graph::distance(int n,int m)//gibt den Abstand zwischen zwei Kunden zurück (abhängug von der ausgelesenen disttype)
 {
@@ -189,7 +161,7 @@ bool disjunkt(int a, int x, int y, int z)//entscheidet ob die vier int Werte (R�
 void Graph::twoopt(){
     int l,m,z,p;
     for (int k=0; k<size; k++){
-        for(int i=0; i<size; i++){
+        for(int i=k; i<size; i++){
             l=nodes[k].getneighborb();
             m=nodes[i].getneighborb();
             if(disjunkt(k,l,i,m) && (distance(k,i)+distance(l,m))<(distance(k,l)+distance(i,m))){//Abfrage ob die vier betrachteten Knoten vier verschiedene Knoten sind und die Tour durch tauschen der Kanten verbessert werden kann.
@@ -212,7 +184,6 @@ void Graph::twoopt(){
         }
     }
 }
-
 /*
     Die folgende Funktion gib die Länge der Tour als double zurück gibt es mehrere Touren in dem Graphen so wir die gewhält die als ersten Knoten den Nachfolger des Depots benutzt
  */

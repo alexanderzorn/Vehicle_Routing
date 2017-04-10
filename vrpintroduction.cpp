@@ -33,7 +33,6 @@ int main (int argc, char* argv[]){
         Wendet twoopt() auf den Graphen an.
      */
     graph.twoopt();
-    //std::cout<<std::endl<<"Länge verbessterte Tour"<<graph.tourdistance()<<std::endl;//zeigt die Länge der Simpletour mit Verbesserung durch twoopt() auf
     
     /*
         Aufteilen der durch twoopt() verbesserten Tour in die einzelnen Fahrzeittouren
@@ -49,8 +48,8 @@ int main (int argc, char* argv[]){
      */
     std::cout<<std::endl<<"OBJECTIVE:"<<graph.totaldistance()<<std::endl;
     graph.printalltours();
-
-    graph.visualprint();
+    //std::cout<<graph.size;//Used for the timeanalysis. for this feature this line has to be the only output of the algorithm
+    graph.visualprint();//Nicht Teil des Eigentlichen Algorithmus. Nur für die Ausgabe in eine svg Datei zuständig.
     
     return 0;
 }
