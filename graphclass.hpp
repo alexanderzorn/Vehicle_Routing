@@ -17,6 +17,7 @@
 #include <iostream>
 #include <exception>
 #include <math.h>
+#include <thread>
 enum Disttype{
     EUC_2D,
     CEIL_2D,
@@ -32,6 +33,7 @@ private:
 public:
     void initializegraph(std::string);//Befüllt den Graphen mit den nötigen Daten, welche er aus einer Datei bezieht deren Namen beim Programmaufruf mitgegeben wird.
     void simpletour();//Bildet eine Tour durch alle Kunden der Form 1,2,3,....,n,1
+    void simplehelp(int);//hilft simpletour bei der Implementierung mit Parallelen Threads.
     double distance(int, int);//gibt die Distanz zwischen zwei Kunden zurück
     double tourdistance();//gibt die Länge einer einzelnen Fahrzeugtour zurück
     void tourpartition();//teilt die Gesamttour anhand der CAPACITY in einzelne Fahrzeutouren auf

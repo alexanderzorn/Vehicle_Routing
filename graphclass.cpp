@@ -113,17 +113,60 @@ void Graph::initializegraph(std::string const filename){
     }
 }
 
+void Graph::simplehelp(int i)//Dient simpletour als Funktion die von jedem Thread mit einem bestimmten i ausgeführt wird.
+{
+    nodes[i].setneighbora(i-1);
+    nodes[i].setneighborb(i+1);
+
+}
+
 void Graph::simpletour()//Erstellt eine einfache Tour auf den Knoten der Form 1,2,3,...,n,1
 {
+    static const int number_of_threads = size-1;
+    std::vector <std::thread> t;
     nodes[0].setneighbora(size-1);
     nodes[0].setneighborb(1);
     nodes[size-1].setneighbora(size-2);
     nodes[size-1].setneighborb(0);
-    for(int i=1; i<size-1;i++){
+
+    //Launch a group of threads
+    for (int i = 0; i < number_of_threads-1; ++i) { 
+        t.push_back(std::thread{&Graph::simplehelp,this , i+1}); 
+    }
+
+    //Join the threads with the main thread
+    for (int i = 0; i < number_of_threads-1; ++i) {
+        t[i].join();
+    }
+
+    /*for(int i=1; i<size-1;i++){
         nodes[i].setneighbora(i-1);
         nodes[i].setneighborb(i+1);
-    }
+    }*/
 }
+
+/*
+      ...
+ 2     static const int num_threads = 10;
+ 3     ...
+ 4     int main() {
+ 5         std::thread t[num_threads];
+ 6 
+ 7         //Launch a group of threads
+ 8         for (int i = 0; i < num_threads; ++i) {
+ 9             t[i] = std::thread(call_from_thread);
+10         }
+11 
+12         std::cout << "Launched from the main\n";
+13 
+14         //Join the threads with the main thread
+15         for (int i = 0; i < num_threads; ++i) {
+16             t[i].join();
+17         }
+18 
+19         return 0;
+20     }
+*/
 
 double Graph::distance(int n,int m)//gibt den Abstand zwischen zwei Kunden zurück (abhängug von der ausgelesenen disttype)
 {
