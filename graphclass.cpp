@@ -12,19 +12,26 @@
  */
 void Graph::initializegraph(std::string const filename){
     Customer newone;
-    int number, xpos, ypos, demandval;
+    int number, xpos, ypos, demandval, securitycounter=0;
     std::fstream file;
     std::string type, fillera=" ", fillerb;
     
     file.open(filename, std::ios::in);
     /* 
         Gehe den ersten Teil der Datei durch und lese die Variablen wie CAPACITY oder DISTTYPE aus bis zur Zeile NODE_COORD_SECTION
+        Falls nach 1000 Zeilen (securitycounter) immer noch nicht die NODE_COORD_SECTION gefunden wurde muss es sich um eine Fehlerhafte Datei handeln.
      */
-    while(fillera.compare(0,18,"NODE_COORD_SECTION")!=0){
+    while(fillera.compare(0,18,"NODE_COORD_SECTION")!=0 && securitycounter<1000){
         file>>fillera>>fillerb;
+        securitycounter++;
         if (fillerb.compare(0,1,":")==0){
             file>>fillerb;
         }
+        //Falls durch die  COMMENT Section die Reihenfolge von fillera und fillerb vertauscht wurde wird das durch folgende if Abfrage abgefangen (nach der COMMENT Section kommt immer die Type Section)
+        if(fillerb.compare(0,5,"TYPE:")==0){
+            file>>fillerb;
+        }
+        
         if(fillera.compare(0,16,"EDGE_WEIGHT_TYPE")==0)//Überprüfung ob die aktuelle Zeile den Distanz type enthält(wenn ja lese ihn aus )
         {   
            
@@ -67,6 +74,10 @@ void Graph::initializegraph(std::string const filename){
             }
              */
         }
+    }
+    if (securitycounter==1000){
+        std::cout<<"Please look for the file Format";
+        std::terminate();
     }
     number= stoi(fillerb);
     file>>xpos>>ypos;
@@ -117,7 +128,6 @@ void Graph::simplehelp(int i)//Dient simpletour als Funktion die von jedem Threa
 {
     nodes[i].setneighbora(i-1);
     nodes[i].setneighborb(i+1);
-
 }
 
 void Graph::simpletour()//Erstellt eine einfache Tour auf den Knoten der Form 1,2,3,...,n,1
@@ -131,7 +141,7 @@ void Graph::simpletour()//Erstellt eine einfache Tour auf den Knoten der Form 1,
 
     //Starte die verschiedenen Theards, in jedem Thread werden die Nachbarn für einen Knoten festgelegt
     for (int i = 0; i < number_of_threads; ++i) { 
-        t.push_back(std::thread(&Graph::simplehelp,this, i+1)); 
+        t.push_back(std::thread(&Graph::simplehelp, this, i+1)); 
     }
 
     //Warte bis alle fertig sind.
@@ -139,7 +149,6 @@ void Graph::simpletour()//Erstellt eine einfache Tour auf den Knoten der Form 1,
         t[i].join();
     }
 }
-
 double Graph::distance(int n,int m)//gibt den Abstand zwischen zwei Kunden zurück (abhängug von der ausgelesenen disttype)
 {
     double distx = abs(nodes[n].getxpos()-nodes[m].getxpos());
@@ -152,15 +161,18 @@ double Graph::distance(int n,int m)//gibt den Abstand zwischen zwei Kunden zurü
 bool disjunkt(int a, int x, int y, int z)//entscheidet ob die vier int Werte (Räpresentanten für Knoten) disjunkt sind. Die wird bei der folgenden Funktion twoopt() benutzt um zu entscheiden ob sich 
 {
     if(a!=x && a!=y && a!=z && x!=y && x!=z && y!=z)return true;
-    
-        else return false;
+
+    else return false;
 }
 /*
     Verbessert die aktuelle Tour anhand der 2-OPT Methode. Sind werden immer zwei Knoten k und i betrachtet und ihre Nachfolger in der aktuellen Tour l, m . z und p sind zwischenspeicher und dienen dazu die gesamte Tour zu verändern wenn zwei Kanten ausgetauscht werden müssen. Wenn Zwei Kanten ausgetausch werden wird durch i=size , k=-1 das gesamte Prozedere wieder von vorne begangen, bis einmal jedes Knotenpaar überprüft wurde und bei dieser Prüfung nicht ein Tausch von nöten war.
  */
+ 
 void Graph::twoopt(){
     int l,m,z,p;
+    bool changed = false;
     for (int k=0; k<size; k++){
+        changed=false;
         for(int i=k; i<size; i++){
             l=nodes[k].getneighborb();
             m=nodes[i].getneighborb();
@@ -178,12 +190,13 @@ void Graph::twoopt(){
                 nodes[z].setneighbora(nodes[z].getneighborb());
                 nodes[z].setneighborb(m);
                 nodes[m].setneighbora(l);
-                i=size;
-                k=-1;
-            }//Wenn ja wird hier s.o der Austausch und die Anpassung allern anderen Knoten durchgeführt
+                changed =true;
+            }//Wenn ja wird hier s.o der Austausch und die Anpassung aller anderen Knoten durchgeführt
         }
+         if(changed)k=-1;
     }
 }
+
 /*
     Die folgende Funktion gib die Länge der Tour als double zurück gibt es mehrere Touren in dem Graphen so wir die gewhält die als ersten Knoten den Nachfolger des Depots benutzt
  */

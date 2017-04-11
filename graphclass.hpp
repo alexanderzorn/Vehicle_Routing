@@ -8,10 +8,10 @@
 
 #ifndef graphclass_hpp
 #define graphclass_hpp
+
 #include "customerclass.hpp"
 #include <fstream>
 #include <vector>
-#include <sstream>
 #include <string>
 #include <stdio.h>
 #include <iostream>

@@ -47,7 +47,7 @@ void Graph::printalltours(){
 /*
     Graphische Visualisierung des Graphen in einer SVG Datei visualprint.svg im aktuellen Ordner.
  */
-
+ 
 void Graph::visualprint(){
     std::fstream f;
     int maximumsize=100;
@@ -64,11 +64,11 @@ void Graph::visualprint(){
     f<<"viewBox=\"-10 -10 "<<maximumsize+100<<" "<<maximumsize+100<<"\">"<<std::endl;
     f<<"<title>Titel der Datei</title>"<<std::endl;
     f<<"<desc>Visualprint</desc>"<<std::endl;
-    for(int nodecounter=0; nodecounter<size; nodecounter++ ){
+    f<<"<circle cx=\""<<nodes[0].getxpos()<<"\" cy=\""<<nodes[0].getypos()<<"\" r=\"1\" />"<<std::endl;
+    f<<"<text x=\""<<nodes[0].getxpos()<<"\" y=\""<<nodes[0].getypos()<<"\" fill=\"red\" style=\"font-size:5px\">"<<1<<"</text>"<<std::endl;
+    for(int nodecounter=1; nodecounter<size; nodecounter++ ){
         f<<"<circle cx=\""<<nodes[nodecounter].getxpos()<<"\" cy=\""<<nodes[nodecounter].getypos()<<"\" r=\"1\" />"<<std::endl;
         f<<"<text x=\""<<nodes[nodecounter].getxpos()<<"\" y=\""<<nodes[nodecounter].getypos()<<"\" fill=\"red\" style=\"font-size:5px\">"<<nodecounter+1<<"</text>"<<std::endl;
-    }
-    for (int nodecounter=1; nodecounter<size;nodecounter++){
         f<<"<line x1=\""<<nodes[nodecounter].getxpos()<<"\" y1=\""<<nodes[nodecounter].getypos()<<"\" x2=\""<<nodes[nodes[nodecounter].getneighborb()].getxpos()<<"\" y2=\""<<nodes[nodes[nodecounter].getneighborb()].getypos()<<"\" style=\"stroke:rgb(0,0,0);stroke-width=1\"  />"<<std::endl;
     }
     for (size_t tourcounter=0;tourcounter<tours.size();tourcounter+=2){
