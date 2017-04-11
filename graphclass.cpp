@@ -124,29 +124,16 @@ void Graph::initializegraph(std::string const filename){
     }
 }
 
-void Graph::simplehelp(int i)//Dient simpletour als Funktion die von jedem Thread mit einem bestimmten i ausgeführt wird.
-{
-    nodes[i].setneighbora(i-1);
-    nodes[i].setneighborb(i+1);
-}
-
 void Graph::simpletour()//Erstellt eine einfache Tour auf den Knoten der Form 1,2,3,...,n,1
 {
-    static const int number_of_threads = size-2;
-    std::vector <std::thread> t;
     nodes[0].setneighbora(size-1);
     nodes[0].setneighborb(1);
     nodes[size-1].setneighbora(size-2);
     nodes[size-1].setneighborb(0);
 
-    //Starte die verschiedenen Theards, in jedem Thread werden die Nachbarn für einen Knoten festgelegt
-    for (int i = 0; i < number_of_threads; ++i) { 
-        t.push_back(std::thread(&Graph::simplehelp, this, i+1)); 
-    }
-
-    //Warte bis alle fertig sind.
-    for (int i = 0; i < number_of_threads; i++) {
-        t[i].join();
+    for (int i = 1; i < size-1; i++) { 
+        nodes[i].setneighbora(i-1);
+        nodes[i].setneighborb(i+1);
     }
 }
 double Graph::distance(int n,int m)//gibt den Abstand zwischen zwei Kunden zurück (abhängug von der ausgelesenen disttype)

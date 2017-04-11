@@ -17,7 +17,6 @@
 #include <iostream>
 #include <exception>
 #include <math.h>
-#include <thread>
 enum Disttype{
     EUC_2D,
     CEIL_2D,
